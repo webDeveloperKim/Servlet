@@ -1,0 +1,53 @@
+plugins {
+    id 'java'
+    id 'war'
+    id 'org.springframework.boot' version '2.4.3'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+group = 'hello'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+// 11.3 설정 업데이트
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-devtools'
+    
+    // JSP 추가
+    // compileOnly 'javax.servlet:javax.servlet-api:3.1.0' 
+    // JSP에서 HttpServlet을 참조하는 용도 (다만 톰캣에서 이미 javax.servelt-api 포함하고 있어서 불필요함
+    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper' // JSP 컴파일용 Jasper 엔진
+    implementation 'javax.servlet:jstl' // JSTL 라이브러리
+    
+    // 롬복 설정
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+// 설정파일 수정 후 프로젝트 반영 단계
+// 콘솔 터미네이트 : 필수는 아니나 권장사항 (현재 콘솔에 연결되어 실행중인 애플리케이션, 서버, 또는 빌드 프로세스 종료)
+// (선택사항) Project Clean : 간혹 캐시된 빌드로 인한 문제 없도록 하기 위함
+// Refresh Gradle Project : Gradle 설정을 프로젝트에 반영
+// 프로젝트 재실행 및 테스트 : 설정 적용 확인
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
